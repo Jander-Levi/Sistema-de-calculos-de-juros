@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema de calculo de juros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">J$</span>
+          <div>
+            <strong>Sistema de juros</strong>
+            <span>Financeiro</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <a class="nav-item is-active" href="#">Calculadora</a>
+          <a class="nav-item" href="#">Historico</a>
+          <a class="nav-item" href="#">Clientes</a>
+          <a class="nav-item" href="#">Relatorios</a>
+          <a class="nav-item" href="#">Configuracoes</a>
+        </nav>
+        <div class="sidebar-card">
+          <span class="eyebrow">Regras ativas</span>
+          <p>Base 30 dias, multa 2% e juros mensal configuravel.</p>
+        </div>
+      </aside>
+
+      <main class="page">
+        <header class="topbar reveal">
+          <div class="topbar-text">
+            <span class="eyebrow">Sistema de calculo</span>
+            <h1>Juros por atraso</h1>
+            <p>
+              Calcule parcelas em atraso com juros diarios, multa fixa e total
+              devido na data escolhida.
+            </p>
+            <div class="chips">
+              <span class="chip">Base 30 dias</span>
+              <span class="chip">Multa 2%</span>
+              <span class="chip">Juros mensal</span>
+            </div>
+          </div>
+          <aside class="summary-card reveal">
+            <div class="summary-head">
+              <span class="eyebrow">Resumo</span>
+              <h2>Total devido</h2>
+            </div>
+            <div class="summary-total" id="summaryTotal">R$ 0,00</div>
+            <div class="summary-grid">
+              <div>Principal</div>
+              <div id="summaryPrincipal">R$ 0,00</div>
+              <div>Juros</div>
+              <div id="summaryInterest">R$ 0,00</div>
+              <div>Multa</div>
+              <div id="summaryPenalty">R$ 0,00</div>
+            </div>
+          </aside>
+        </header>
+
+        <section class="panel reveal">
+          <div class="panel-head">
+            <h2>Parametros</h2>
+            <p>Defina taxas e a data padrao para novas parcelas.</p>
+          </div>
+          <div class="form-grid">
+            <label class="field">
+              Juros mensal (%)
+              <input id="monthlyRate" type="number" step="0.01" value="1" />
+            </label>
+            <label class="field">
+              Multa (%)
+              <input id="penaltyRate" type="number" step="0.01" value="2" />
+            </label>
+            <label class="field">
+              Base de dias
+              <input id="baseDays" type="number" step="1" value="30" />
+            </label>
+            <label class="field">
+              Data de calculo padrao
+              <input id="defaultCalcDate" type="date" />
+            </label>
+          </div>
+        </section>
+
+        <section class="panel reveal">
+          <div class="panel-head panel-head--row">
+            <div>
+              <h2>Parcelas</h2>
+              <p>Preencha valor, vencimento e data de calculo.</p>
+            </div>
+            <div class="actions">
+              <button class="btn" id="addRow" type="button">
+                Adicionar parcela
+              </button>
+              <button class="btn btn-ghost" id="resetRows" type="button">
+                Limpar
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="calc-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Valor mensalidade</th>
+                  <th>Data vencimento</th>
+                  <th>Data calculo</th>
+                  <th>Dias</th>
+                  <th>M proporcional ao dia</th>
+                  <th>Total de juros</th>
+                  <th>Multa</th>
+                  <th>Total devido</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="calcBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel reveal">
+          <div class="panel-head">
+            <h2>Resumo rapido</h2>
+            <p>Somas parciais e comparativos por parcela.</p>
+          </div>
+          <div class="summary-cards">
+            <div class="mini-card">
+              <span class="mini-label">Soma parcial (1 + 2)</span>
+              <strong id="partialSum">--</strong>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">Soma total</span>
+              <strong id="totalSum">R$ 0,00</strong>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">Subtracao parcela 1</span>
+              <strong id="firstDiff">--</strong>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
