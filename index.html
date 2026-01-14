@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sistema de calculo de juros</title>
+    <title>Sistema financeiro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,13 +22,33 @@
             <span>Financeiro</span>
           </div>
         </div>
-        <nav class="nav">
-          <a class="nav-item is-active" href="#">Calculadora</a>
-          <a class="nav-item" href="#">Historico</a>
-          <a class="nav-item" href="#">Clientes</a>
-          <a class="nav-item" href="#">Relatorios</a>
-          <a class="nav-item" href="#">Configuracoes</a>
+        <nav class="nav" role="tablist">
+          <button
+            class="nav-item is-active"
+            type="button"
+            data-tab-target="juros"
+            role="tab"
+            aria-selected="true"
+          >
+            Juros por atraso
+          </button>
+          <button
+            class="nav-item"
+            type="button"
+            data-tab-target="desconto"
+            role="tab"
+            aria-selected="false"
+          >
+            Desconto proporcional
+          </button>
         </nav>
+        <div class="sidebar-history">
+          <span class="eyebrow">Historico</span>
+          <p>Onde serao salvos todos os calculos realizados.</p>
+          <ul class="history-list" id="historyList">
+            <li class="history-empty">Sem calculos salvos.</li>
+          </ul>
+        </div>
         <div class="sidebar-card">
           <span class="eyebrow">Regras ativas</span>
           <p>Base 30 dias, multa 2% e juros mensal configuravel.</p>
@@ -36,117 +56,277 @@
       </aside>
 
       <main class="page">
-        <header class="topbar reveal">
-          <div class="topbar-text">
-            <span class="eyebrow">Sistema de calculo</span>
-            <h1>Juros por atraso</h1>
-            <p>
-              Calcule parcelas em atraso com juros diarios, multa fixa e total
-              devido na data escolhida.
-            </p>
-            <div class="chips">
-              <span class="chip">Base 30 dias</span>
-              <span class="chip">Multa 2%</span>
-              <span class="chip">Juros mensal</span>
+        <section
+          class="tab-panel is-active"
+          data-tab-panel="juros"
+          role="tabpanel"
+        >
+          <header class="topbar reveal">
+            <div class="topbar-text">
+              <span class="eyebrow">Sistema de calculo</span>
+              <h1>Juros por atraso</h1>
+              <p>
+                Calcule parcelas em atraso com juros diarios, multa fixa e
+                total devido na data escolhida.
+              </p>
+              <div class="chips">
+                <span class="chip">Base 30 dias</span>
+                <span class="chip">Multa 2%</span>
+                <span class="chip">Juros mensal</span>
+              </div>
             </div>
-          </div>
-          <aside class="summary-card reveal">
-            <div class="summary-head">
-              <span class="eyebrow">Resumo</span>
-              <h2>Total devido</h2>
-            </div>
-            <div class="summary-total" id="summaryTotal">R$ 0,00</div>
-            <div class="summary-grid">
-              <div>Principal</div>
-              <div id="summaryPrincipal">R$ 0,00</div>
-              <div>Juros</div>
-              <div id="summaryInterest">R$ 0,00</div>
-              <div>Multa</div>
-              <div id="summaryPenalty">R$ 0,00</div>
-            </div>
-          </aside>
-        </header>
+            <aside class="summary-card reveal">
+              <div class="summary-head">
+                <span class="eyebrow">Resumo</span>
+                <h2>Total devido</h2>
+              </div>
+              <div class="summary-total" id="summaryTotal">R$ 0,00</div>
+              <div class="summary-grid">
+                <div>Principal</div>
+                <div id="summaryPrincipal">R$ 0,00</div>
+                <div>Juros</div>
+                <div id="summaryInterest">R$ 0,00</div>
+                <div>Multa</div>
+                <div id="summaryPenalty">R$ 0,00</div>
+              </div>
+            </aside>
+          </header>
 
-        <section class="panel reveal">
-          <div class="panel-head">
-            <h2>Parametros</h2>
-            <p>Defina taxas e a data padrao para novas parcelas.</p>
-          </div>
-          <div class="form-grid">
-            <label class="field">
-              Juros mensal (%)
-              <input id="monthlyRate" type="number" step="0.01" value="1" />
-            </label>
-            <label class="field">
-              Multa (%)
-              <input id="penaltyRate" type="number" step="0.01" value="2" />
-            </label>
-            <label class="field">
-              Base de dias
-              <input id="baseDays" type="number" step="1" value="30" />
-            </label>
-            <label class="field">
-              Data de calculo padrao
-              <input id="defaultCalcDate" type="date" />
-            </label>
-          </div>
+          <section class="panel reveal">
+            <div class="panel-head">
+              <h2>Parametros</h2>
+              <p>Defina taxas e a data padrao para novas parcelas.</p>
+            </div>
+            <div class="form-grid">
+              <label class="field">
+                Juros mensal (%)
+                <input id="monthlyRate" type="number" step="0.01" value="1" />
+              </label>
+              <label class="field">
+                Multa (%)
+                <input id="penaltyRate" type="number" step="0.01" value="2" />
+              </label>
+              <label class="field">
+                Base de dias
+                <input id="baseDays" type="number" step="1" value="30" />
+              </label>
+              <label class="field">
+                Data de calculo padrao
+                <input id="defaultCalcDate" type="date" />
+              </label>
+            </div>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head panel-head--row">
+              <div>
+                <h2>Parcelas</h2>
+                <p>Preencha valor, vencimento e data de calculo.</p>
+              </div>
+              <div class="actions">
+                <button class="btn" id="addRow" type="button">
+                  Adicionar parcela
+                </button>
+                <button class="btn btn-ghost" id="resetRows" type="button">
+                  Limpar
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="calc-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Valor mensalidade</th>
+                    <th>Data vencimento</th>
+                    <th>Data calculo</th>
+                    <th>Dias</th>
+                    <th>M proporcional ao dia</th>
+                    <th>Total de juros</th>
+                    <th>Multa</th>
+                    <th>Total devido</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="calcBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head">
+              <h2>Resumo rapido</h2>
+              <p>Somas parciais e comparativos por parcela.</p>
+            </div>
+            <div class="summary-cards">
+              <div class="mini-card">
+                <span class="mini-label">Soma parcial (1 + 2)</span>
+                <strong id="partialSum">--</strong>
+              </div>
+              <div class="mini-card">
+                <span class="mini-label">Soma total</span>
+                <strong id="totalSum">R$ 0,00</strong>
+              </div>
+              <div class="mini-card">
+                <span class="mini-label">Subtracao parcela 1</span>
+                <strong id="firstDiff">--</strong>
+              </div>
+            </div>
+          </section>
         </section>
 
-        <section class="panel reveal">
-          <div class="panel-head panel-head--row">
-            <div>
-              <h2>Parcelas</h2>
-              <p>Preencha valor, vencimento e data de calculo.</p>
+        <section
+          class="tab-panel"
+          data-tab-panel="desconto"
+          role="tabpanel"
+          aria-hidden="true"
+        >
+          <header class="topbar reveal">
+            <div class="topbar-text">
+              <span class="eyebrow">Sistema de desconto</span>
+              <h1>Desconto proporcional</h1>
+              <p>
+                Calcule descontos por dias e horas com base no valor mensal.
+              </p>
+              <div class="chips">
+                <span class="chip">Base 30 dias</span>
+                <span class="chip">Horas por dia</span>
+                <span class="chip">Desconto proporcional</span>
+              </div>
             </div>
-            <div class="actions">
-              <button class="btn" id="addRow" type="button">
-                Adicionar parcela
-              </button>
-              <button class="btn btn-ghost" id="resetRows" type="button">
-                Limpar
-              </button>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table class="calc-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Valor mensalidade</th>
-                  <th>Data vencimento</th>
-                  <th>Data calculo</th>
-                  <th>Dias</th>
-                  <th>M proporcional ao dia</th>
-                  <th>Total de juros</th>
-                  <th>Multa</th>
-                  <th>Total devido</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="calcBody"></tbody>
-            </table>
-          </div>
-        </section>
+            <aside class="summary-card reveal">
+              <div class="summary-head">
+                <span class="eyebrow">Resumo</span>
+                <h2>Valor final</h2>
+              </div>
+              <div class="summary-total" id="summaryFinalHero">R$ 0,00</div>
+              <div class="summary-grid">
+                <div>Valor mensal</div>
+                <div id="summaryMonthlyHero">R$ 0,00</div>
+                <div>Total de desconto</div>
+                <div id="summaryTotalDiscountHero">R$ 0,00</div>
+              </div>
+            </aside>
+          </header>
 
-        <section class="panel reveal">
-          <div class="panel-head">
-            <h2>Resumo rapido</h2>
-            <p>Somas parciais e comparativos por parcela.</p>
-          </div>
-          <div class="summary-cards">
-            <div class="mini-card">
-              <span class="mini-label">Soma parcial (1 + 2)</span>
-              <strong id="partialSum">--</strong>
+          <section class="panel reveal">
+            <div class="panel-head">
+              <h2>Parametros</h2>
+              <p>Informe os valores base para o calculo.</p>
             </div>
-            <div class="mini-card">
-              <span class="mini-label">Soma total</span>
-              <strong id="totalSum">R$ 0,00</strong>
+            <div class="form-grid">
+              <label class="field">
+                Valor mensal (R$)
+                <input
+                  id="monthlyValue"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="119,00"
+                />
+              </label>
+              <label class="field">
+                Base de dias
+                <input
+                  id="discountBaseDays"
+                  type="number"
+                  step="1"
+                  min="0"
+                  value="30"
+                />
+              </label>
+              <label class="field">
+                Horas por dia
+                <input
+                  id="hoursPerDay"
+                  type="number"
+                  step="1"
+                  min="0"
+                  value="24"
+                />
+              </label>
             </div>
-            <div class="mini-card">
-              <span class="mini-label">Subtracao parcela 1</span>
-              <strong id="firstDiff">--</strong>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head">
+              <h2>Desconto por dias</h2>
+              <p>Defina a quantidade de dias para desconto proporcional.</p>
             </div>
-          </div>
+            <div class="form-grid">
+              <label class="field">
+                Quantidade de dias
+                <input id="dayQty" type="number" step="1" min="0" value="0" />
+              </label>
+              <div class="field field--static">
+                <span>Formula aplicada</span>
+                <div class="formula">
+                  Valor mensal / Base de dias x Quantidade de dias
+                </div>
+              </div>
+              <div class="field field--static">
+                <span>Desconto em dias (R$)</span>
+                <div class="result" id="dayDiscount">R$ 0,00</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head">
+              <h2>Desconto por horas</h2>
+              <p>Informe a quantidade de horas para desconto proporcional.</p>
+            </div>
+            <div class="form-grid">
+              <label class="field">
+                Quantidade de horas
+                <input id="hourQty" type="number" step="1" min="0" value="0" />
+              </label>
+              <label class="field">
+                Quantidade de minutos
+                <input id="minuteQty" type="number" step="1" min="0" value="0" />
+              </label>
+              <div class="field field--static">
+                <span>Formula aplicada</span>
+                <div class="formula">
+                  (Valor mensal / Base de dias / Horas por dia) x (Horas +
+                  Minutos / 60)
+                </div>
+              </div>
+              <div class="field field--static">
+                <span>Desconto em horas (R$)</span>
+                <div class="result" id="hourDiscount">R$ 0,00</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head panel-head--row">
+              <div>
+                <h2>Resumo</h2>
+                <p>Totais consolidados do desconto calculado.</p>
+              </div>
+              <div class="actions">
+                <button class="btn" id="saveCalc" type="button">
+                  Salvar calculo
+                </button>
+                <button class="btn btn-ghost" id="resetCalc" type="button">
+                  Limpar
+                </button>
+              </div>
+            </div>
+            <div class="summary-grid summary-grid--panel">
+              <div>Valor mensal</div>
+              <div id="summaryMonthly">R$ 0,00</div>
+              <div>Desconto por dias</div>
+              <div id="summaryDayDiscount">R$ 0,00</div>
+              <div>Desconto por horas</div>
+              <div id="summaryHourDiscount">R$ 0,00</div>
+              <div>Total de desconto</div>
+              <div id="summaryTotalDiscount">R$ 0,00</div>
+              <div>Valor final com desconto</div>
+              <div id="summaryFinal">R$ 0,00</div>
+            </div>
+          </section>
         </section>
       </main>
     </div>

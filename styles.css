@@ -106,13 +106,18 @@ body::before {
 }
 
 .nav-item {
+  appearance: none;
   text-decoration: none;
   color: rgba(213, 222, 234, 0.8);
   padding: 10px 12px 10px 14px;
   border-radius: 12px;
   border: 1px solid transparent;
+  background: transparent;
   font-weight: 500;
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
 
 .nav-item:hover {
@@ -125,6 +130,48 @@ body::before {
   color: #ffffff;
   border-color: rgba(17, 134, 111, 0.4);
   box-shadow: 0 12px 24px rgba(11, 31, 58, 0.25);
+}
+
+.sidebar-history {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.78);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-history p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 160px;
+  overflow: auto;
+}
+
+.history-item {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15, 28, 46, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+}
+
+.history-empty {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .sidebar-card {
@@ -147,6 +194,16 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 22px;
+}
+
+.tab-panel {
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tab-panel.is-active {
+  display: flex;
 }
 
 .topbar {
@@ -228,6 +285,20 @@ body::before {
   color: var(--muted);
 }
 
+.summary-grid--panel {
+  margin-top: 6px;
+}
+
+.summary-grid--panel div:nth-child(even) {
+  font-weight: 600;
+  color: var(--accent-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-grid--panel div:last-child {
+  color: var(--accent);
+}
+
 .panel {
   background: var(--surface);
   border-radius: var(--radius);
@@ -271,6 +342,25 @@ body::before {
   gap: 6px;
   font-size: 0.95rem;
   color: var(--muted);
+}
+
+.formula {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(15, 28, 46, 0.18);
+  background: var(--surface-strong);
+  color: var(--accent-2);
+  font-size: 0.92rem;
+}
+
+.result {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(17, 134, 111, 0.25);
+  background: rgba(17, 134, 111, 0.08);
+  color: var(--accent-2);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 input[type="number"],
@@ -416,16 +506,20 @@ input[type="date"]:focus {
   animation-delay: 0.05s;
 }
 
-.panel:nth-of-type(1) {
+.tab-panel .panel:nth-of-type(1) {
   animation-delay: 0.1s;
 }
 
-.panel:nth-of-type(2) {
+.tab-panel .panel:nth-of-type(2) {
   animation-delay: 0.18s;
 }
 
-.panel:nth-of-type(3) {
+.tab-panel .panel:nth-of-type(3) {
   animation-delay: 0.26s;
+}
+
+.tab-panel .panel:nth-of-type(4) {
+  animation-delay: 0.34s;
 }
 
 @keyframes reveal {
@@ -454,6 +548,10 @@ input[type="date"]:focus {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  .sidebar-history {
+    width: 100%;
   }
 
   .sidebar-card {
